@@ -10,7 +10,7 @@ const routes: Routes = [
   {path: 'dashboard',component:DashboardComponent},
   {path: 'alunos',component:AlunosComponent},
   {path: 'perfil',component:PerfilComponent},
-  {path: 'professores',component:AlunosComponent},
+  {path: 'professores',component:ProfessoresComponent},
 ];
 
 @NgModule({
