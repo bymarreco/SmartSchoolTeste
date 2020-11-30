@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartSchool_WebAPI.Data;
 using System;
 using System.Threading.Tasks;
+using SmartSchool_WebAPI.Models;
 
 namespace SmartSchool_WebAPI.Controllers
 {
@@ -59,6 +60,69 @@ namespace SmartSchool_WebAPI.Controllers
                 
                 return BadRequest($"Erro: {ex.Message}");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> post(Aluno model)
+        {
+            try
+            {
+                _repo.Add(model);
+                if(await _repo.SaveChangesAsync())
+                {
+                    return Ok(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                return BadRequest($"Erro: {ex.Message}");
+            }
+            return BadRequest();
+        }
+
+        [HttpPut("{alunoId}")]
+        public async Task<IActionResult> put(int alunoId,Aluno model)
+        {
+            try
+            {
+                var aluno = await _repo.GetAlunoAsyncById(alunoId,false);
+                if(aluno == null) return NotFound();
+
+                _repo.Update(model);
+                if(await _repo.SaveChangesAsync())
+                {
+                    return Ok(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                return BadRequest($"Erro: {ex.Message}");
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete("{alunoId}")]
+        public async Task<IActionResult> delete(int alunoId)
+        {
+            try
+            {
+                var aluno = await _repo.GetAlunoAsyncById(alunoId,false);
+                if(aluno == null) return NotFound();
+
+                _repo.Delete(aluno);
+                if(await _repo.SaveChangesAsync())
+                {
+                    return Ok("Deletado");
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                return BadRequest($"Erro: {ex.Message}");
+            }
+            return BadRequest();
         }
     }
 }
