@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using SmartSchool_WebAPI.Data;
 using System;
+using System.Threading.Tasks;
 
 namespace SmartSchool_WebAPI.Controllers
 {
@@ -7,12 +9,50 @@ namespace SmartSchool_WebAPI.Controllers
     [Route("api/[controller]")]
     public class AlunoController : ControllerBase
     {
+        private readonly IRepository _repo;
+
+        public AlunoController(IRepository repo)
+        {
+            _repo = repo;
+            
+        }
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
             try
             {
-                return Ok("");
+                var result = await _repo.GetAllAlunosAsync(true);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                
+                return BadRequest($"Erro: {ex.Message}");
+            }
+        }
+
+        [HttpGet("{AlunoId}")]
+        public async Task<IActionResult> GetByAlunoId(int AlunoId)
+        {
+            try
+            {
+                var result = await _repo.GetAlunoAsyncById(AlunoId,true);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                
+                return BadRequest($"Erro: {ex.Message}");
+            }
+        }
+
+        [HttpGet("ByDisciplina/{disciplinaId}")]
+        public async Task<IActionResult> GetByDisciplinaId(int disciplinaId)
+        {
+            try
+            {
+                var result = await _repo.GetAlunosAsyncByDisciplinaId(disciplinaId,true);
+                return Ok(result);
             }
             catch (Exception ex)
             {
